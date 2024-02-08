@@ -1,12 +1,9 @@
 import { ActorRefFrom, createMachine, assign, stopChild } from "xstate";
 import { trackMachine } from "./trackMachine";
 
-const makeId = () => Math.random().toString(36).substring(7);
-
 export const mixerMachine = createMachine({
   types: {} as {
     context: {
-      newTrackName: string;
       tracks: ActorRefFrom<typeof trackMachine>[];
     };
     events:
@@ -21,22 +18,13 @@ export const mixerMachine = createMachine({
   },
   id: "tracks",
   context: {
-    newTrackName: "",
     tracks: [],
   },
   on: {
     "TRACKS.ADD": {
       guard: ({ event }) => event.name.trim().length > 0,
       actions: assign({
-        tracks: ({ context, event, spawn }) =>
-          context.tracks.concat(
-            spawn(trackMachine, {
-              id: `track-${makeId()}`,
-              input: {
-                name: event.name,
-              },
-            })
-          ),
+        tracks: ({ context, event }) => [event.name, ...context.tracks],
       }),
     },
     "TRACK.REMOVE": {

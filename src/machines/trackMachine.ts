@@ -1,72 +1,28 @@
-import { createMachine, assign, fromPromise } from "xstate";
+import { createActorContext } from "@xstate/react";
+import { createMachine } from "xstate";
 
 export const trackMachine = createMachine({
   id: "track",
   types: {} as {
     context: {
-      prevName: string;
       name: string;
     };
-    events:
-      | {
-          type: "SET_NAME";
-          value: string;
-        }
-      | {
-          type: "SAVE";
-        }
-      | {
-          type: "EDIT";
-        }
-      | {
-          type: "CANCEL";
-        };
+    events: {
+      type: "SET_NAME";
+      value: string;
+    };
+
     input: {
       name: string;
     };
   },
   initial: "reading",
   context: ({ input }) => ({
-    prevName: input.name,
-    name: input.name,
+    tracks: input,
   }),
   states: {
-    reading: {
-      tags: "read",
-      on: {
-        EDIT: "editing",
-      },
-    },
-    editing: {
-      tags: "form",
-      on: {
-        SET_NAME: {
-          actions: assign({ name: ({ event }) => event.value }),
-        },
-        SAVE: {
-          target: "saving",
-        },
-      },
-    },
-    saving: {
-      tags: ["form", "saving"],
-      invoke: {
-        src: fromPromise(async () => {
-          // Simulate network request
-          await new Promise((resolve) => setTimeout(resolve, 1000));
-          return true;
-        }),
-        onDone: {
-          target: "reading",
-          actions: assign({ prevName: ({ context }) => context.name }),
-        },
-      },
-    },
-  },
-  on: {
-    CANCEL: {
-      actions: assign({ name: ({ context }) => context.prevName }),
-      target: ".reading",
-    },
+    reading: {},
   },
 });
+
+export const TrackContext = createActorContext(trackMachine);

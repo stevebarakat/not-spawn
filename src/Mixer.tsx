@@ -1,25 +1,27 @@
 import { useMachine } from "@xstate/react";
 import { mixerMachine } from "./machines/mixerMachine";
 import Track from "./Track";
+import { TrackContext } from "./machines/trackMachine";
 
 function Mixer() {
   const [state, send] = useMachine(mixerMachine);
+  const makeId = () => Math.random().toString(36).substring(7);
 
-  console.log("context", state.context);
+  console.log("state.context", state.context);
+  const tracks = state.context.tracks;
 
   return (
     <div className="app">
       <h2>Tracks</h2>
       <div className="tracksTable">
-        {state.context.tracks.map((track, index) => {
-          return (
+        {state.context.tracks.map((track, index) => (
+          <TrackContext.Provider key={makeId()} options={{ input: tracks }}>
             <Track
-              key={track.id}
               track={track}
               onRemove={() => send({ type: "TRACK.REMOVE", index })}
             />
-          );
-        })}
+          </TrackContext.Provider>
+        ))}
       </div>
 
       <select

@@ -1,10 +1,12 @@
-import { useSelector } from "@xstate/react";
+import { useMachine } from "@xstate/react";
+import { trackMachine } from "./machines/trackMachine";
 
 function Track({ track, onRemove }) {
-  const { name } = useSelector(track, (s) => s.context);
+  const [state] = useMachine(trackMachine);
+  console.log("state", state);
   return (
     <div>
-      {/* {name} */}
+      {track}
       <button onClick={onRemove}>x</button>
     </div>
   );
