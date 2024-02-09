@@ -7,22 +7,19 @@ function Mixer() {
   const [state, send] = useMachine(mixerMachine);
   const makeId = () => Math.random().toString(36).substring(7);
 
-  console.log("state.context", state.context);
   const tracks = state.context.tracks;
 
   return (
     <div className="app">
       <h2>Tracks</h2>
-      <div className="tracksTable">
-        {state.context.tracks.map((track, index) => (
-          <TrackContext.Provider key={makeId()} options={{ input: tracks }}>
-            <Track
-              track={track}
-              onRemove={() => send({ type: "TRACK.REMOVE", index })}
-            />
-          </TrackContext.Provider>
-        ))}
-      </div>
+      {state.context.tracks.map((track, index) => (
+        <TrackContext.Provider key={makeId()} options={{ input: tracks }}>
+          <Track
+            track={track}
+            onRemove={() => send({ type: "TRACK.REMOVE", index })}
+          />
+        </TrackContext.Provider>
+      ))}
 
       <select
         onChange={(e) => {

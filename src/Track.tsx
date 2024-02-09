@@ -1,13 +1,13 @@
-import { useMachine } from "@xstate/react";
-import { trackMachine } from "./machines/trackMachine";
+type Props = {
+  track: string;
+  onRemove: () => void;
+};
 
-function Track({ track, onRemove }) {
-  const [state] = useMachine(trackMachine);
-  console.log("state", state);
+function Track({ track, onRemove }: Props) {
   return (
     <div>
-      {track}
       <button onClick={onRemove}>x</button>
+      {track}
     </div>
   );
 }

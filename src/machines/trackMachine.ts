@@ -7,11 +7,6 @@ export const trackMachine = createMachine({
     context: {
       name: string;
     };
-    events: {
-      type: "SET_NAME";
-      value: string;
-    };
-
     input: {
       name: string;
     };
