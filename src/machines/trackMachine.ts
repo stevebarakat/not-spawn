@@ -13,7 +13,7 @@ export const trackMachine = createMachine({
   },
   initial: "reading",
   context: ({ input }) => ({
-    tracks: input,
+    tracks: input.name,
   }),
   states: {
     reading: {},

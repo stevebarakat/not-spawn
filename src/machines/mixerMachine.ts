@@ -1,4 +1,4 @@
-import { ActorRefFrom, createMachine, assign, stopChild } from "xstate";
+import { ActorRefFrom, createMachine, assign } from "xstate";
 import { trackMachine } from "./trackMachine";
 
 export const mixerMachine = createMachine({
